@@ -31,10 +31,10 @@ const jwtCheck = jwt({
     algorithms: ['RS256']
 });
 
-const sslOptions = {
-	cert: fs.readFileSync('./ssl/cert.pem'),
-	key: fs.readFileSync('./ssl/key.pem')
-};
+//const sslOptions = {
+//	cert: fs.readFileSync('./ssl/cert.pem'),
+//	key: fs.readFileSync('./ssl/key.pem')
+//};
 
 app.use('/alerts',            jwtCheck, proxyTo(config.appServiceHost) )
 app.use('/subscriptions',     jwtCheck, proxyTo(config.pushServiceHost) )

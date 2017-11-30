@@ -22,6 +22,6 @@ self.addEventListener('notificationclick', function(event) {
 	event.notification.close();
 
 	event.waitUntil(
-  	clients.openWindow('https://coin-notification-c62c0.firebaseapp.com/')
+  	clients.openWindow('https://homuchen.me')
 	);
 });
