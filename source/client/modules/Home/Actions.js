@@ -135,7 +135,9 @@ export const removeUserSubscription = userId => {
   return dispatch => {
     axios({
       method: 'delete',
-			"Authorization": `Bearer ${localStorage.getItem('id_token')}`,
+			headers: {
+				"Authorization": `Bearer ${localStorage.getItem('id_token')}`,
+			},
       url: `${config.push_service_host}/subscriptions/${userId}`,
     }).then(payload => dispatch(removeUserSubscriptionDone(payload)));
   };
