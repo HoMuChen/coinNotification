@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Webpack App</title>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+  </head>
+  <body>
+	<div id='root'></div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.0.0/umd/react.production.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.0.0/umd/react-dom.production.min.js"></script>
+	<script>
+		if('serviceWorker' in navigator) {  
+    	navigator.serviceWorker  
+        .register('sw.js')  
+        .then(function() { console.log('Service Worker Registered'); });  
+		}
+	</script>
+</html>
