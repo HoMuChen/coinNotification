@@ -38,6 +38,11 @@ const jwtCheck = jwt({
 
 app.use('/alerts',            jwtCheck, proxyTo(config.appServiceHost) )
 app.use('/subscriptions',     jwtCheck, proxyTo(config.pushServiceHost) )
+app.use('/coin_price/:coin',  proxyTo(config.appServiceHost) )
+
+app.use('/', function (req, res) {
+  res.sendFile(path.join(__dirname, '../../dist', '/index.html'))
+})
 
 app.listen(config.port, () => {
 	console.log(`Express App is listen on port ${config.port}`)

@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-//const OfflinePlugin = require('offline-plugin');
 
 const envToInject = {
 	CLIENT_ID:	process.env['CLIENT_ID'],
@@ -11,21 +10,30 @@ const envToInject = {
 }
 
 const webpackConfig = {
-	entry: './source/client/index.js',
+	entry: {
+		app: ['./source/client/index.js'],
+		common: ['./node_modules/immutable', './node_modules/redux', './node_modules/react-redux', './node_modules/redux-immutable', './node_modules/axios', './node_modules/react-router', './node_modules/react-router-redux', './node_modules/redux-thunk', './node_modules/redux-auth-wrapper']
+	},
 	output: {
 		path: `${__dirname}/dist`,
-		filename: 'bundle.js'
+		filename: '[name].js',
 	},
 	module: {
 		rules: [
 			{ test: /\.js$/, use: 'babel-loader' },
 			{	test: /\.css$/, use: ['style-loader', 'css-loader'] },
+			{	test: /\.less$/, use: ['style-loader', 'css-loader', 'less-loader'] },
 		]
 	},
 	plugins: [
 		new HtmlWebpackPlugin({template: './source/client/index.html'}),
 		new webpack.DefinePlugin({
-			"env": JSON.stringify(envToInject)
+			"myEnv": JSON.stringify(envToInject)
+		}),
+		new webpack.optimize.CommonsChunkPlugin({
+			name:'common',
+			chunks: ['app','common'],
+			filename:'commons.js',
 		}),
 		new UglifyJSPlugin(),
 		//new OfflinePlugin()

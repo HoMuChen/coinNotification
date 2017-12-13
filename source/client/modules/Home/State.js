@@ -3,47 +3,68 @@ import Immutable from 'immutable';
 
 import * as __ from './Actions';
 
-const alertsInitState = Immutable.OrderedMap()
-const alerts = (_=alertsInitState, action) => {
+const initPriceState = Immutable.fromJS({
+	bit: [],
+	eth: [],
+	ltc: [],
+});
+const priceData = (_=initPriceState, action) => {
 	switch(action.type) {
-		case __.FCH_ALERTS_DONE:
-			return Immutable.fromJS(action.alerts)
-					.map( row => Immutable.OrderedMap().set(row.get('id'), row) )
-					.reduce( (cur, next, _) => cur.merge(next), Immutable.OrderedMap() )
-		case __.ADD_ALERT_DONE:
-			return _.set(action.id, Immutable.fromJS(action.alert));
-		case __.DELETE_ALERT_DONE:
-			return _.delete(action.id);
+		case __.FCH_PRICE_DONE:
+			return _.set(action.coin, Immutable.fromJS(action.price))
 		default:
 			return _;
 	}
 }
 
-const isSubscribed = (_=false, action) => {
+const initPriceChangePercentageState = Immutable.OrderedMap({
+	'bit': 0,
+	'eth': 0,
+	'ltc': 0
+});
+const priceChangePercentage = (_=initPriceChangePercentageState, action) => {
 	switch(action.type) {
-		case __.CHECK_IS_SUBSCRIBED_DONE:
-			return action.isSubscribed;
-		case __.ADD_USER_SUBSCRIPTION_DONE:
-			console.log(action.subscription)
-			return true;
-		case __.REMOVE_USER_SUBSCRIPTION_DONE:
-			return false;
+		case __.FCH_PRICE_DONE:
+			const prices = Immutable.fromJS(action.price);
+			const lastestPrice = prices.first().get('price');
+			const oneDayAgoPrice = prices.last().get('price');
+			const changePercentage = Math.round(((lastestPrice - oneDayAgoPrice)/oneDayAgoPrice)*10000)/100
+			return _.set(action.coin, changePercentage)
 		default:
 			return _;
 	}
 }
 
-const isAddingAlert = (_=false, action) => {
+
+const initPriceAvgState = Immutable.OrderedMap({
+	'bit': 0,
+	'eth': 0,
+	'ltc': 0
+});
+const priceAvg = (_=initPriceAvgState, action) => {
 	switch(action.type) {
-		case __.TGL_ADDING_ALERT:
-			return !_;
+		case __.FCH_PRICE_DONE:
+			const sum = action.price.map(p => p.price).reduce((x, y) => x+y, 0);
+			const avg = Number((sum/action.price.length).toFixed(0));
+			return _.set(action.coin, avg)
+		default:
+			return _;
+	}
+}
+
+
+const selectedCoin = (_='bit', action) => {
+	switch(action.type) {
+		case __.SELECT_COIN:
+			return action.coin;
 		default:
 			return _;
 	}
 }
 
 export const homeReducer = combineReducers({
-	alerts,
-	isAddingAlert,
-	isSubscribed,
+	priceData,
+	priceChangePercentage,
+	priceAvg,
+	selectedCoin,
 })

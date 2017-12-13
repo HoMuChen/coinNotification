@@ -1,53 +1,119 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Grid from 'material-ui/Grid';
-import PriceCard from '../../components/PriceCard';
-import SubscriptionTable from '../../components/SubscriptionTable';
+import numeral from 'numeral';
 
-import { fchAlerts, addAlert, deleteAlert, tglAddingAlert, checkIsSubscribed, addUserSubscription, removeUserSubscription} from './Actions';
+import { Row, Col, Tooltip, Icon, Card, Tabs } from 'antd';
+import { Bar, TimelineChart, ChartCard, Field, yuan } from 'ant-design-pro/lib/Charts';
+const TabPane = Tabs.TabPane;
+import 'ant-design-pro/dist/ant-design-pro.css';
 
-class Home extends React.Component{
-	componentDidMount() {
-		this.props.fchAlerts(this.props.user_id);
-		this.props.checkIsSubscribed(this.props.user_id);
+import PriceChart from '../../components/PriceChart';
+
+import {
+	fchPrice,
+  selectCoin,
+} from './Actions';
+
+class Home extends React.Component {
+  componentDidMount() {
+		this.props.fchPrice('bit');
+		this.props.fchPrice('eth');
+		this.props.fchPrice('ltc');
+  }
+
+	handleSelectCoin = (key) => {
+		this.props.selectCoin(key);
 	}
 
-	render() {
-		return (
-			<Grid container direction='column' alignItems='center'>
-				<Grid item style={{ width: '100%', marginTop: 20 }}>
-					<PriceCard />
-				</Grid>
-				<Grid item style={{ width: '100%', marginTop: 20 }}>
-					<SubscriptionTable
-						user_id={this.props.user_id}
-						alerts={this.props.alerts}
-						isAddingAlert={this.props.isAddingAlert}
-						addAlert={this.props.addAlert}
-						deleteAlert={this.props.deleteAlert}
-						isSubscribed={this.props.isSubscribed}
-						tglAddingAlert={this.props.tglAddingAlert}
-						addUserSubscription={this.props.addUserSubscription}
-						removeUserSubscription={this.props.removeUserSubscription}
-					/>
-				</Grid>
-			</Grid>
-		);
-	}
+  render() {
+		const { priceChangePercentage, priceAvg, priceData, selectedCoin } = this.props;
+
+		const topColResponsiveProps = {
+			xs: 24,
+			sm: 12,
+			md: 8,
+			lg: 8,
+			xl: 8,
+			style: { marginBottom: 24 },
+		};
+
+		const Trend = ({flag}) => (
+			flag == 'up'
+				? <Icon type="caret-up" style={{color: 'red', marginTop: 2}} />
+				: <Icon type="caret-down" style={{color: 'green', marginTop: 2}} />
+		)
+
+    return (
+			<div>
+      	<Row gutter={24}>
+        	<Col {...topColResponsiveProps}>
+						<ChartCard
+							title="比特幣"
+							total={yuan(priceData.getIn(['bit', 0, 'price']))}
+							footer={<Field label="日均價" value={numeral(priceAvg.get('bit')).format('0,0')} />}
+							contentHeight={46}
+						>
+							近24小時漲跌幅
+							<span style={{marginLeft: 7, marginRight: 7}}>
+								{ `${priceChangePercentage.get('bit')}%` }
+							</span>
+							<Trend flag={priceChangePercentage.get('bit')>0? 'up': 'down'}/>
+						</ChartCard>
+        	</Col>
+        	<Col {...topColResponsiveProps}>
+						<ChartCard
+							title="以太幣"
+							total={yuan(priceData.getIn(['eth', 0, 'price']))}
+							footer={<Field label="日均價" value={numeral(priceAvg.get('eth')).format('0,0')} />}
+							contentHeight={46}
+						>
+							近24小時漲跌幅
+							<span style={{marginLeft: 7, marginRight: 7}}>
+								{ `${priceChangePercentage.get('eth')}%` }
+							</span>
+							<Trend flag={priceChangePercentage.get('eth')>0? 'up': 'down'}/>
+						</ChartCard>
+        	</Col>
+        	<Col {...topColResponsiveProps}>
+						<ChartCard
+							title="萊特幣"
+							total={yuan(priceData.getIn(['ltc', 0, 'price']))}
+							footer={<Field label="日均價" value={numeral(priceAvg.get('ltc')).format('0,0')} />}
+							contentHeight={46}
+						>
+							近24小時漲跌幅
+							<span style={{marginLeft: 7, marginRight: 7}}>
+								{ `${priceChangePercentage.get('ltc')}%` }
+							</span>
+							<Trend flag={priceChangePercentage.get('ltc')>0? 'up': 'down'}/>
+						</ChartCard>
+        	</Col>
+      	</Row>
+				<Row>
+        	<Col span={24}>
+						<Tabs defaultActiveKey='bit' onChange={this.handleSelectCoin}>
+							<TabPane tab="比特幣" key="bit"><PriceChart priceData={priceData} selectedCoin='bit'/></TabPane>
+							<TabPane tab="以太幣" key="eth"><PriceChart priceData={priceData} selectedCoin='eth'/></TabPane>
+							<TabPane tab="萊特幣" key="ltc"><PriceChart priceData={priceData} selectedCoin='ltc'/></TabPane>
+						</Tabs>
+        	</Col>
+				</Row>
+			</div>
+    );
+  }
 }
 
-export default connect((state) => ({
-  user_id:             state.getIn(['app', 'user', 'id']),
-	alerts:              state.getIn(['home', 'alerts']),
-	isAddingAlert:       state.getIn(['home', 'isAddingAlert']),
-	isSubscribed:        state.getIn(['home', 'isSubscribed']),
-}),{
-	fchAlerts,
-  addAlert,
-	deleteAlert,
-	checkIsSubscribed,
-	tglAddingAlert,
-	addUserSubscription,
-	removeUserSubscription,
-})(Home)
+export default connect(
+  state => ({
+    user_id: state.getIn(['app', 'user', 'id']),
+    priceData: state.getIn(['home', 'priceData']),
+		priceChangePercentage: state.getIn(['home', 'priceChangePercentage']),
+    priceAvg: state.getIn(['home', 'priceAvg']),
+		selectedCoin: state.getIn(['home', 'selectedCoin']),
+  }),
+  {
+		fchPrice,
+		selectCoin,
+  }
+)(Home);

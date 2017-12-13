@@ -1,13 +1,14 @@
 import React from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import connectedAuthWrapper from 'redux-auth-wrapper/connectedAuthWrapper';
+import Exception from 'ant-design-pro/lib/Exception';
 
 import App from './modules/App/Container';
 import Home from './modules/Home/Container';
-//import Subscription from './modules/Subscription/Container';
+import Alert from './modules/Alert/Container';
 
 const Login = () => (
-	<h1>Please login in first</h1>
+	<Exception type="403" desc="請先登入" style={{ marginTop: 200 }}/>
 )
 
 const UserIsAuthenticated = connectedAuthWrapper({
@@ -21,9 +22,9 @@ const Authenticated = UserIsAuthenticated((props) => props.children);
 export default () => (
 	<Router history={browserHistory} >
 		<Route path="/" component={App}>
+			<IndexRoute component={Home} />
 			<Route component={Authenticated}>
-				<IndexRoute component={Home} />
-				{/* <Route path='subscription' component={Subscription} /> */}
+				<Route exact path='/alert' component={Alert} />
 			</Route>
 		</Route>
 	</Router>
