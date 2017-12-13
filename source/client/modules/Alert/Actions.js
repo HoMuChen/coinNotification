@@ -83,7 +83,7 @@ export const checkIsSubscribed = (userId) => {
 	return dispatch => {
 		axios({
 			method: 'get',
-			url: `http:\/\/localhost:3002/subscriptions/${userId}`
+			url: `${config.push_service_host}/subscriptions/${userId}`
 		})
 		.then(payload => {
 			if(payload.data) dispatch( checkIsSubscribedDone(true) )
@@ -106,7 +106,7 @@ export const addUserSubscription = (userId) => {
 			.then(subscription => (
 				axios({
 					method: 'post',
-					url: 'http://localhost:3002/subscriptions',
+					url: `${config.push_service_host}/subscriptions`,
 					headers: {
 						'content-type': 'application/json'
 					},
@@ -131,7 +131,7 @@ export const removeUserSubscription = (userId) => {
 	return dispatch => {
 		axios({
 			method: 'delete',
-			url: `http:\/\/localhost:3002/subscriptions/${userId}`
+			url: `${config.push_service_host}/subscriptions/${userId}`
 		})
 		.then(payload => dispatch(removeUserSubscriptionDone(payload)) )
 	}
