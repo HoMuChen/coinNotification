@@ -83,6 +83,9 @@ export const checkIsSubscribed = (userId) => {
 	return dispatch => {
 		axios({
 			method: 'get',
+			headers: {
+				"Authorization": `Bearer ${localStorage.getItem('id_token')}`
+			},
 			url: `${config.push_service_host}/subscriptions/${userId}`
 		})
 		.then(payload => {
@@ -108,7 +111,8 @@ export const addUserSubscription = (userId) => {
 					method: 'post',
 					url: `${config.push_service_host}/subscriptions`,
 					headers: {
-						'content-type': 'application/json'
+						'content-type': 'application/json',
+						"Authorization": `Bearer ${localStorage.getItem('id_token')}`
 					},
 					data: {
 						doc: {
@@ -131,6 +135,9 @@ export const removeUserSubscription = (userId) => {
 	return dispatch => {
 		axios({
 			method: 'delete',
+			headers: {
+				"Authorization": `Bearer ${localStorage.getItem('id_token')}`
+			},
 			url: `${config.push_service_host}/subscriptions/${userId}`
 		})
 		.then(payload => dispatch(removeUserSubscriptionDone(payload)) )
