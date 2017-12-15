@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+		"build-prod": "webpack --define process.env.NODE_ENV='\"production\"'",
     "build": "webpack",
     "dev": "webpack --watch"
   },
