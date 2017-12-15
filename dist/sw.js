@@ -1,20 +1,21 @@
 const cacheName = 'coin-notification-1';
 const filesToCache = [
-  '/',
+	'/',
 	'/commons.js',
 	'/app.js',
 ];
 
 self.addEventListener('install', function(e) {
   console.log('[ServiceWorker] Install');
-  e.waitUntil(
-    caches.open(cacheName).then(function(cache) {
-      console.log('[ServiceWorker] Caching app shell');
-      return cache.addAll(filesToCache);
-    })
-  );
+  //e.waitUntil(
+  //  caches.open(cacheName).then(function(cache) {
+  //    console.log('[ServiceWorker] Caching app shell');
+  //    return cache.addAll(filesToCache);
+  //  })
+  //);
 });
 
+/*
 self.addEventListener('activate', function(e) {  
   console.log('[ServiceWorker] Activate');  
   e.waitUntil(  
@@ -28,7 +29,8 @@ self.addEventListener('activate', function(e) {
     })  
   );  
 });
-
+*/
+/*
 self.addEventListener('fetch', function(e) {
   console.log('[ServiceWorker] Fetch', e.request.url);
   e.respondWith(
@@ -37,7 +39,7 @@ self.addEventListener('fetch', function(e) {
     })
   );
 });
-
+*/
 self.addEventListener('push', function(event) {
 	console.log('[Service Worker] Push Received.');
 	console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);

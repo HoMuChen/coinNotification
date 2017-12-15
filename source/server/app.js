@@ -36,9 +36,11 @@ const jwtCheck = jwt({
 //	key: fs.readFileSync('./ssl/key.pem')
 //};
 
-app.use('/alerts',            jwtCheck, proxyTo(config.appServiceHost) )
-app.use('/subscriptions',     jwtCheck, proxyTo(config.pushServiceHost) )
-app.use('/coin_price/:coin',  proxyTo(config.appServiceHost) )
+app.use('/alerts',                  jwtCheck, proxyTo(config.appServiceHost) )
+app.use('/subscriptions',           jwtCheck, proxyTo(config.pushServiceHost) )
+app.use('/coin_price/:coin',        proxyTo(config.appServiceHost) )
+app.use('/taiex/:limit',            proxyTo(config.appServiceHost) )
+app.use('/legal_foundation/:type',  proxyTo(config.appServiceHost) )
 
 app.use('/', function (req, res) {
   res.sendFile(path.join(__dirname, '../../dist', '/index.html'))
