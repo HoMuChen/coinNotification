@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --devtool eval --progress --colors --content-base build",
-    "build": "webpack"
+    "build": "webpack",
+    "dev": "webpack --watch"
   },
   "author": "",
   "license": "ISC",

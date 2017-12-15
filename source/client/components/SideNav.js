@@ -21,7 +21,7 @@ class Navigator extends React.Component {
 				</SubMenu>
         <Menu.Item key="5" disabled>
           <Icon type="setting" />
-          <span>Setting</span>
+          <span>交易紀錄</span>
         </Menu.Item>
       </Menu>
 		);
