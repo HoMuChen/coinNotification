@@ -5,6 +5,7 @@ import Exception from 'ant-design-pro/lib/Exception';
 
 import App from './modules/App/Container';
 import Home from './modules/Home/Container';
+import StockDashboard from './modules/StockDashboard/Container';
 import Alert from './modules/Alert/Container';
 
 const Login = () => (
@@ -23,8 +24,9 @@ export default () => (
 	<Router history={browserHistory} >
 		<Route path="/" component={App}>
 			<IndexRoute component={Home} />
+			<Route path='/twStock' component={StockDashboard} />
 			<Route component={Authenticated}>
-				<Route exact path='/alert' component={Alert} />
+				<Route path='/alert' component={Alert} />
 			</Route>
 		</Route>
 	</Router>

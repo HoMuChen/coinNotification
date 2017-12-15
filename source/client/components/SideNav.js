@@ -13,7 +13,7 @@ class Navigator extends React.Component {
       <Menu theme="dark" mode="inline" defaultSelectedKeys={['/']} defaultOpenKeys={['sub1']}>
         <SubMenu key="sub1" title={<div><Icon type="dashboard" /><span>DashBoard</span></div>}>
 					<Menu.Item key="/"><Link to='/'>虛擬貨幣</Link></Menu.Item>
-					<Menu.Item key="twStock" disabled>台灣股市</Menu.Item>
+					<Menu.Item key="twStock"><Link to='/twStock'>台灣股市</Link></Menu.Item>
 				</SubMenu>
         <SubMenu key="sub2" title={<div><Icon type="warning" /><span>示警推播</span></div>}>
 					<Menu.Item key="alert"><Link to='/alert'>虛擬貨幣</Link></Menu.Item>
