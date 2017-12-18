@@ -92,7 +92,7 @@ class StockDashboard extends React.Component {
 				<Row gutter={24}>
 					<Col span={24}>
 						<Card title="台股大盤加權指數">
-							<KLineChart data={taiex.toJS()}/>
+							<KLineChart data={taiex.toJS()} min={9000} height={400}/>
 						</Card>
 					</Col>
 				</Row>

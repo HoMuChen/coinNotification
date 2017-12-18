@@ -25,11 +25,11 @@ class KLineChart extends React.Component {
 	}
 
 	initChart(props) {
-		const { data } = props;
+		const { data, min, height } = props;
 
 		const chart = new G2.Chart({
 			id: this.chartId,
-			height: 600,
+			height: height || 600,
 			forceFit: true
 		});
 
@@ -39,12 +39,15 @@ class KLineChart extends React.Component {
 				mask: 'yyyy-mm-dd',
 				alias: '日期'
 			},
+			'diff': {
+				alias: '價差'
+			},
 			'ocRange': {
 				alias: '價格',
-				min: 10000,
+				min: min || 0,
 			},
 			'lhRange': {
-				min: 10000,
+				min: min || 0,
 			}
 		});
 
@@ -85,6 +88,8 @@ class KLineChart extends React.Component {
 
 KLineChart.propTypes = {
 	data:				PropTypes.array.isRequired,
+	min:				PropTypes.number,
+	height:			PropTypes.number,
 }
 
 export default KLineChart;

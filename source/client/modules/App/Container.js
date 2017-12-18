@@ -9,7 +9,7 @@ const { Header, Sider, Content, Footer } = Layout;
 import SideNav from '../../components/SideNav';
 
 import Auth from '../../utils/Auth';
-import { fchUser, fchUserDone, clrUser } from './Actions'
+import { fchUser, fchUserDone, clrUser, fchCompanies } from './Actions'
 
 class App extends React.Component{
 	constructor() {
@@ -24,7 +24,11 @@ class App extends React.Component{
 		const idToken = localStorage.getItem('id_token');
 		if(idToken) {
 			const decodedJWT = decode(idToken);
-			this.props.fchUserDone({ id: decodedJWT.sub, email: decodedJWT.email });
+			if(Date.now() > decodedJWT.exp*1000) {
+				this.handleLogout();
+			}else {
+				this.props.fchUserDone({ id: decodedJWT.sub, email: decodedJWT.email });
+			}
 		}
 
 		this.auth.handleAuthenticated()
@@ -34,6 +38,8 @@ class App extends React.Component{
 					this.props.fchUserDone({ id: authResult.idTokenPayload.sub, email: authResult.idTokenPayload.email });
 				}
 			})
+
+		this.props.fchCompanies();
 	}
 
 	handleLogin = () => {
@@ -123,5 +129,6 @@ export default connect(
 		fchUser,
 		fchUserDone,
 		clrUser,
+		fchCompanies,
 	}
 )(App)
